@@ -1,0 +1,30 @@
+{
+  "name": "ai-summary-extension",
+  "version": "1.0.0",
+  "description": "Chrome extension for capturing web page content and AI-powered summarization",
+  "main": "index.js",
+  "scripts": {
+    "install-backend": "cd backend && npm install",
+    "start-backend": "cd backend && npm start",
+    "dev-backend": "cd backend && npm run dev",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup": "npm run install-backend",
+    "dev": "concurrently \"npm run dev-backend\" \"npm run serve-frontend\"",
+    "serve-frontend": "cd frontend && npx serve . -p 3000"
+  },
+  "keywords": [
+    "chrome-extension",
+    "ai",
+    "summary",
+    "web-scraping",
+    "api"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "workspaces": [
+    "backend"
+  ]
+} 

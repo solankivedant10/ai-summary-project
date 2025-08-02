@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Summary Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .captures-list {
+            background: #f8f9fa;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .capture-item {
+            padding: 20px;
+            border-bottom: 1px solid #dee2e6;
+            transition: background-color 0.3s ease;
+        }
+
+        .capture-item:hover {
+            background: #e9ecef;
+        }
+
+        .capture-item:last-child {
+            border-bottom: none;
+        }
+
+        .capture-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .capture-title {
+            font-weight: 600;
+            color: #495057;
+            flex: 1;
+        }
+
+        .capture-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .capture-url {
+            color: #667eea;
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .capture-url:hover {
+            text-decoration: underline;
+        }
+
+        .capture-content {
+            color: #495057;
+            line-height: 1.6;
+            max-height: 100px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .capture-content::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(transparent, #f8f9fa);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AI Summary Dashboard</h1>
+            <p>View and manage captured page content</p>
+        </div>
+
+        <div class="content">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalCaptures">0</div>
+                    <div class="stat-label">Total Captures</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalWords">0</div>
+                    <div class="stat-label">Total Words</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avgWords">0</div>
+                    <div class="stat-label">Avg Words/Capture</div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-primary" onclick="loadCaptures()">Refresh</button>
+                <button class="btn btn-secondary" onclick="clearAllCaptures()">Clear All</button>
+                <a href="http://localhost:3001/health" target="_blank" class="btn btn-secondary">API Health</a>
+            </div>
+
+            <div id="error" class="error" style="display: none;"></div>
+
+            <div class="captures-list" id="capturesList">
+                <div class="loading">Loading captures...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001/api';
+
+        // Load captures on page load
+        document.addEventListener('DOMContentLoaded', loadCaptures);
+
+        async function loadCaptures() {
+            try {
+                const response = await fetch(`${API_BASE}/captures`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                displayCaptures(data.captures);
+                updateStats(data.captures);
+                
+            } catch (error) {
+                showError(`Failed to load captures: ${error.message}`);
+            }
+        }
+
+        function displayCaptures(captures) {
+            const list = document.getElementById('capturesList');
+            
+            if (captures.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No captures yet</h3>
+                        <p>Use the Chrome extension to capture page content</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = captures.map(capture => `
+                <div class="capture-item">
+                    <div class="capture-header">
+                        <div class="capture-title">${escapeHtml(capture.title)}</div>
+                        <div class="capture-meta">
+                            <span>${capture.wordCount} words</span>
+                            <span>${formatDate(capture.timestamp)}</span>
+                            <button class="btn btn-danger" onclick="deleteCapture('${capture.id}')">Delete</button>
+                        </div>
+                    </div>
+                    <a href="${escapeHtml(capture.url)}" target="_blank" class="capture-url">${escapeHtml(capture.url)}</a>
+                    <div class="capture-content">${escapeHtml(capture.content || 'No content available')}</div>
+                </div>
+            `).join('');
+        }
+
+        function updateStats(captures) {
+            const totalCaptures = captures.length;
+            const totalWords = captures.reduce((sum, capture) => sum + (capture.wordCount || 0), 0);
+            const avgWords = totalCaptures > 0 ? Math.round(totalWords / totalCaptures) : 0;
+
+            document.getElementById('totalCaptures').textContent = totalCaptures;
+            document.getElementById('totalWords').textContent = totalWords.toLocaleString();
+            document.getElementById('avgWords').textContent = avgWords;
+        }
+
+        async function deleteCapture(id) {
+            if (!confirm('Are you sure you want to delete this capture?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/capture/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                loadCaptures(); // Reload the list
+                
+            } catch (error) {
+                showError(`Failed to delete capture: ${error.message}`);
+            }
+        }
+
+        async function clearAllCaptures() {
+            if (!confirm('Are you sure you want to clear all captures? This cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const captures = await fetch(`${API_BASE}/captures`).then(r => r.json());
+                
+                // Delete all captures
+                for (const capture of captures.captures) {
+                    await fetch(`${API_BASE}/capture/${capture.id}`, {
+                        method: 'DELETE'
+                    });
+                }
+                
+                loadCaptures(); // Reload the list
+                
+            } catch (error) {
+                showError(`Failed to clear captures: ${error.message}`);
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleString();
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,147 @@
+.capture-item {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.capture-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.capture-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  gap: 15px;
+}
+
+.capture-title h3 {
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+  line-height: 1.3;
+}
+
+.capture-domain {
+  color: #667eea;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: #f8f9ff;
+  padding: 2px 8px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+.capture-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.word-count {
+  background: #e9ecef;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.timestamp {
+  font-size: 0.8rem;
+}
+
+.capture-url {
+  margin-bottom: 15px;
+}
+
+.capture-url a {
+  color: #667eea;
+  text-decoration: none;
+  font-size: 0.9rem;
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.capture-url a:hover {
+  text-decoration: underline;
+}
+
+.capture-content {
+  margin-bottom: 20px;
+}
+
+.capture-content p {
+  color: #555;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.capture-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.capture-actions .btn {
+  flex: 1;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+}
+
+.capture-summary-indicator {
+  text-align: center;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.summary-badge {
+  display: block;
+  color: #28a745;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+}
+
+.capture-summary-indicator small {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .capture-item {
+    padding: 15px;
+  }
+  
+  .capture-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .capture-meta {
+    align-items: flex-start;
+    flex-direction: row;
+    gap: 10px;
+  }
+  
+  .capture-actions {
+    flex-direction: column;
+  }
+  
+  .capture-title h3 {
+    font-size: 1.1rem;
+  }
+} 
