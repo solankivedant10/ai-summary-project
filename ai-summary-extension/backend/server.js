@@ -112,6 +112,10 @@ app.use((err, req, res, next) => {
     });
 });
 
+app.get('/api/v1/test', (req, res) => {
+  res.json({ success: true, message: "Test route working!" });
+});
+
 // 404 handler
 app.use('*', (req, res) => {
     res.status(404).json({
